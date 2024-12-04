@@ -1,0 +1,492 @@
+class SistemaAgendamento:
+    def __init__(self):
+        self.profissionais = {}
+
+    def cadastrar_profissional(self, nome, especialidade):
+        if nome in self.profissionais:
+            print(f"O profissional {nome} já está cadastrado.")
+            return
+        self.profissionais[nome] = {
+            "especialidade": especialidade,
+            "agenda": []
+        }
+        print(f"Profissional {nome} cadastrado com sucesso!")
+
+    def listar_profissionais(self):
+        if not self.profissionais:
+            print("Nenhum profissional cadastrado.")
+            return
+        print("Profissionais cadastrados:")
+        for nome, dados in self.profissionais.items():
+            print(f"Nome: {nome}, Especialidade: {dados['especialidade']}")
+
+    def adicionar_horario_agenda(self, nome, horario):
+        if nome not in self.profissionais:
+            print(f"Profissional {nome} não encontrado.")
+            return
+        self.profissionais[nome]["agenda"].append(horario)
+        print(f"Horário {horario} adicionado à agenda de {nome}.")
+
+    def exibir_agenda(self, nome):
+        if nome not in self.profissionais:
+            print(f"Profissional {nome} não encontrado.")
+            return
+        print(f"Agenda de {nome}: {self.profissionais[nome]['agenda']}")
+
+#Testando sistema
+if __name__ == "__main__":
+    sistema = SistemaAgendamento()
+
+    while True:
+        print("\n--- Menu ---")
+        print("1. Cadastrar profissional")
+        print("2. Listar profissionais")
+        print("3. Adicionar horário na agenda")
+        print("4. Exibir agenda de um profissional")
+        print("5. Sair")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            nome = input("Nome do profissional: ")
+            especialidade = input("Especialidade: ")
+            sistema.cadastrar_profissional(nome, especialidade)
+        elif opcao == "2":
+            sistema.listar_profissionais()
+        elif opcao == "3":
+            nome = input("Nome do profissional: ")
+            horario = input("Horário para adicionar (ex: 10:00 - 11:00): ")
+            sistema.adicionar_horario_agenda(nome, horario)
+        elif opcao == "4":
+            nome = input("Nome do profissional: ")
+            sistema.exibir_agenda(nome)
+        elif opcao == "5":
+            print("Saindo...")
+            break
+        else:
+            print("Opção inválida!")
+
+class SistemaPerfis:
+    def __init__(self):
+        self.perfis = {}  #Armazena os perfis e seus clientes
+        self.clientes = {}  #Armazena os dados dos clientes
+
+    def cadastrar_perfil(self, nome_perfil, beneficio):
+        if nome_perfil in self.perfis:
+            print(f"O perfil '{nome_perfil}' já está cadastrado.")
+            return
+        self.perfis[nome_perfil] = {
+            "beneficio": beneficio,
+            "clientes": []
+        }
+        print(f"Perfil '{nome_perfil}' cadastrado com sucesso!")
+
+    def listar_perfis(self):
+        if not self.perfis:
+            print("Nenhum perfil cadastrado.")
+            return
+        print("Perfis cadastrados:")
+        for perfil, dados in self.perfis.items():
+            print(f"Perfil: {perfil}, Benefício: {dados['beneficio']}")
+
+    def cadastrar_cliente(self, nome_cliente, email, perfil):
+        if perfil not in self.perfis:
+            print(f"O perfil '{perfil}' não existe. Cadastre o perfil primeiro.")
+            return
+        if nome_cliente in self.clientes:
+            print(f"O cliente '{nome_cliente}' já está cadastrado.")
+            return
+        self.clientes[nome_cliente] = {
+            "email": email,
+            "perfil": perfil
+        }
+        self.perfis[perfil]["clientes"].append(nome_cliente)
+        print(f"Cliente '{nome_cliente}' cadastrado no perfil '{perfil}' com sucesso!")
+
+    def listar_clientes_por_perfil(self, perfil):
+        if perfil not in self.perfis:
+            print(f"O perfil '{perfil}' não existe.")
+            return
+        clientes = self.perfis[perfil]["clientes"]
+        if not clientes:
+            print(f"Nenhum cliente no perfil '{perfil}'.")
+            return
+        print(f"Clientes no perfil '{perfil}':")
+        for cliente in clientes:
+            print(f"- {cliente}")
+
+#Testando o sistema
+if __name__ == "__main__":
+    sistema = SistemaPerfis()
+
+    while True:
+        print("\n--- Menu ---")
+        print("1. Cadastrar perfil")
+        print("2. Listar perfis")
+        print("3. Cadastrar cliente")
+        print("4. Listar clientes por perfil")
+        print("5. Sair")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            nome_perfil = input("Nome do perfil: ")
+            beneficio = input("Benefício do perfil: ") #Exemplos de Perfis e Benefícios: VIP: desconto de 20% em serviços. Regular: Pontuação dobrada no programa de fidelidade. Corporativo: Atendimento prioritário.
+            sistema.cadastrar_perfil(nome_perfil, beneficio)
+        elif opcao == "2":
+            sistema.listar_perfis()
+        elif opcao == "3":
+            nome_cliente = input("Nome do cliente: ")
+            email = input("Email do cliente: ")
+            perfil = input("Perfil do cliente: ")
+            sistema.cadastrar_cliente(nome_cliente, email, perfil)
+        elif opcao == "4":
+            perfil = input("Nome do perfil: ")
+            sistema.listar_clientes_por_perfil(perfil)
+        elif opcao == "5":
+            print("Saindo...")
+            break
+        else:
+            print("Opção inválida!")
+
+class SistemaUsuarios:
+    def __init__(self):
+        #Estrutura de dados: {username: {"senha": senha, "role": role, "email": email, "nome": nome}}
+        self.usuarios = {
+            "admin": {"senha": "admin123", "role": "admin", "email": "admin@empresa.com", "nome": "Administrador"},
+            "joao": {"senha": "joao123", "role": "cliente", "email": "joao@gmail.com", "nome": "João Silva"}
+        }
+        self.usuario_logado = None
+
+    def login(self, username, senha):
+        if username in self.usuarios and self.usuarios[username]["senha"] == senha:
+            self.usuario_logado = username
+            print(f"Usuário {username} logado com sucesso!")
+        else:
+            print("Credenciais inválidas.")
+
+    def logout(self):
+        print(f"Usuário {self.usuario_logado} desconectado.")
+        self.usuario_logado = None
+
+    def alterar_dados(self, campo, novo_valor):
+        if not self.usuario_logado:
+            print("Nenhum usuário está logado.")
+            return
+        usuario = self.usuarios[self.usuario_logado]
+        
+        #Verifica as permissões para alterar os dados
+        if usuario["role"] == "admin" and campo != "senha":
+            print("O administrador pode alterar apenas a senha.")
+            return
+        if campo not in usuario:
+            print(f"Campo '{campo}' não pode ser alterado.")
+            return
+        
+        #Altera os dados
+        usuario[campo] = novo_valor
+        print(f"{campo.capitalize()} alterado com sucesso para '{novo_valor}'!")
+
+    def exibir_dados_usuario(self):
+        if not self.usuario_logado:
+            print("Nenhum usuário está logado.")
+            return
+        usuario = self.usuarios[self.usuario_logado]
+        print(f"Dados do usuário logado:")
+        for campo, valor in usuario.items():
+            print(f"{campo.capitalize()}: {valor}")
+
+#Testando o sistema
+if __name__ == "__main__":
+    sistema = SistemaUsuarios()
+
+    while True:
+        print("\n--- Menu ---")
+        print("1. Login")
+        print("2. Alterar dados do usuário logado")
+        print("3. Exibir dados do usuário logado")
+        print("4. Logout")
+        print("5. Sair")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            username = input("Nome de usuário: ")
+            senha = input("Senha: ")
+            sistema.login(username, senha)
+        elif opcao == "2":
+            campo = input("Campo a ser alterado (nome, email, senha): ")
+            novo_valor = input(f"Novo valor para {campo}: ")
+            sistema.alterar_dados(campo, novo_valor)
+        elif opcao == "3":
+            sistema.exibir_dados_usuario()
+        elif opcao == "4":
+            sistema.logout()
+        elif opcao == "5":
+            print("Saindo...")
+            break
+        else:
+            print("Opção inválida!")
+
+class SistemaAgenda:
+    def __init__(self):
+        # Estrutura: {username: {"senha": senha, "nome": nome, "agenda": [horários]}}
+        self.profissionais = {
+            "ana": {"senha": "ana123", "nome": "Ana Paula", "agenda": ["10:00 - Consulta", "14:00 - Retorno"]},
+            "mario": {"senha": "mario123", "nome": "Mario Silva", "agenda": ["09:00 - Exame", "15:00 - Avaliação"]}
+        }
+        self.profissional_logado = None
+
+    def login(self, username, senha):
+        if username in self.profissionais and self.profissionais[username]["senha"] == senha:
+            self.profissional_logado = username
+            print(f"Bem-vindo, {self.profissionais[username]['nome']}!")
+        else:
+            print("Credenciais inválidas.")
+
+    def logout(self):
+        if self.profissional_logado:
+            print(f"Usuário {self.profissionais[self.profissional_logado]['nome']} desconectado.")
+            self.profissional_logado = None
+        else:
+            print("Nenhum usuário está logado.")
+
+    def visualizar_agenda(self):
+        if not self.profissional_logado:
+            print("Nenhum profissional está logado.")
+            return
+        agenda = self.profissionais[self.profissional_logado]["agenda"]
+        if not agenda:
+            print("Sua agenda está vazia.")
+            return
+        print(f"Agenda de {self.profissionais[self.profissional_logado]['nome']}:")
+        for horario in agenda:
+            print(f"- {horario}")
+
+# Testando o sistema
+if __name__ == "__main__":
+    sistema = SistemaAgenda()
+
+    while True:
+        print("\n--- Menu ---")
+        print("1. Login")
+        print("2. Visualizar agenda pessoal")
+        print("3. Logout")
+        print("4. Sair")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            username = input("Username: ")
+            senha = input("Senha: ")
+            sistema.login(username, senha)
+        elif opcao == "2":
+            sistema.visualizar_agenda()
+        elif opcao == "3":
+            sistema.logout()
+        elif opcao == "4":
+            print("Saindo...")
+            break
+        else:
+            print("Opção inválida!")
+
+class Perfil:
+    def __init__(self, nome, beneficio):
+        self.nome = nome
+        self.beneficio = beneficio
+
+
+class Profissional:
+    def __init__(self, nome, email, senha, especialidade):
+        self.nome = nome
+        self.email = email
+        self.senha = senha
+        self.especialidade = especialidade
+        self.agenda = []
+
+    def autenticar(self, senha):
+        return self.senha == senha
+
+    def adicionar_horario(self, horario):
+        self.agenda.append(horario)
+
+    def exibir_agenda(self):
+        return self.agenda
+
+
+class Cliente:
+    def __init__(self, nome, email, senha, perfil):
+        self.nome = nome
+        self.email = email
+        self.senha = senha
+        self.perfil = perfil
+
+    def atualizar_dados(self, campo, novo_valor):
+        if hasattr(self, campo):
+            setattr(self, campo, novo_valor)
+        else:
+            print(f"Campo '{campo}' não encontrado no cliente.")
+
+
+class Sistema:
+    def __init__(self):
+        self.profissionais = {}
+        self.clientes = {}
+        self.perfis = {}
+
+    # Perfis
+    def cadastrar_perfil(self, nome, beneficio):
+        if nome in self.perfis:
+            print(f"O perfil '{nome}' já existe.")
+            return
+        self.perfis[nome] = Perfil(nome, beneficio)
+        print(f"Perfil '{nome}' cadastrado com sucesso!")
+
+    # Profissionais
+    def cadastrar_profissional(self, nome, email, senha, especialidade):
+        if nome in self.profissionais:
+            print(f"O profissional '{nome}' já está cadastrado.")
+            return
+        self.profissionais[nome] = Profissional(nome, email, senha, especialidade)
+        print(f"Profissional '{nome}' cadastrado com sucesso!")
+
+    def autenticar_profissional(self, nome, senha):
+        profissional = self.profissionais.get(nome)
+        if profissional and profissional.autenticar(senha):
+            print(f"Profissional '{nome}' autenticado com sucesso!")
+            return True
+        print("Credenciais inválidas para o profissional.")
+        return False
+
+    # Clientes
+    def cadastrar_cliente(self, nome, email, senha, perfil):
+        if perfil not in self.perfis:
+            print(f"O perfil '{perfil}' não existe. Cadastre o perfil primeiro.")
+            return
+        if nome in self.clientes:
+            print(f"O cliente '{nome}' já está cadastrado.")
+            return
+        self.clientes[nome] = Cliente(nome, email, senha, self.perfis[perfil])
+        print(f"Cliente '{nome}' cadastrado no perfil '{perfil}' com sucesso!")
+
+    def listar_perfis(self):
+        for nome, perfil in self.perfis.items():
+            print(f"Perfil: {nome}, Benefício: {perfil.beneficio}")
+
+    def listar_profissionais(self):
+        for nome, profissional in self.profissionais.items():
+            print(f"Profissional: {nome}, Especialidade: {profissional.especialidade}")
+
+    def listar_clientes(self):
+        for nome, cliente in self.clientes.items():
+            print(f"Cliente: {nome}, Email: {cliente.email}, Perfil: {cliente.perfil.nome}")
+
+
+# Teste do Sistema
+if __name__ == "__main__":
+    sistema = Sistema()
+
+    # Cadastrando Perfis
+    sistema.cadastrar_perfil("VIP", "20% de desconto")
+    sistema.cadastrar_perfil("Regular", "Pontuação em fidelidade")
+
+    # Cadastrando Profissionais
+    sistema.cadastrar_profissional("Dr. João", "joao@clinica.com", "senha123", "Dermatologia")
+    sistema.cadastrar_profissional("Dr. Maria", "maria@clinica.com", "senha123", "Cardiologia")
+
+    # Cadastrando Clientes
+    sistema.cadastrar_cliente("Carlos", "carlos@gmail.com", "senha123", "VIP")
+    sistema.cadastrar_cliente("Ana", "ana@gmail.com", "senha123", "Regular")
+
+    # Listando Dados
+    sistema.listar_perfis()
+    sistema.listar_profissionais()
+    sistema.listar_clientes()
+
+    # Autenticando Profissional
+    sistema.autenticar_profissional("Dr. João", "senha123")
+    sistema.autenticar_profissional("Dr. João", "senhaerrada")
+
+import json
+import os
+
+class BasePersistencia:
+    def __init__(self, arquivo):
+        self.arquivo = arquivo
+        self.dados = self._carregar_dados()
+
+    def _carregar_dados(self):
+        if os.path.exists(self.arquivo):
+            with open(self.arquivo, 'r') as f:
+                return json.load(f)
+        return {}
+
+    def salvar_dados(self):
+        with open(self.arquivo, 'w') as f:
+            json.dump(self.dados, f, indent=4)
+
+    def adicionar(self, chave, valor):
+        if chave in self.dados:
+            print(f"Registro com chave '{chave}' já existe.")
+            return
+        self.dados[chave] = valor
+        self.salvar_dados()
+        print(f"Registro '{chave}' adicionado com sucesso!")
+
+    def atualizar(self, chave, campo, valor):
+        if chave not in self.dados:
+            print(f"Registro com chave '{chave}' não encontrado.")
+            return
+        self.dados[chave][campo] = valor
+        self.salvar_dados()
+        print(f"Registro '{chave}' atualizado com sucesso!")
+
+    def remover(self, chave):
+        if chave not in self.dados:
+            print(f"Registro com chave '{chave}' não encontrado.")
+            return
+        del self.dados[chave]
+        self.salvar_dados()
+        print(f"Registro '{chave}' removido com sucesso!")
+
+    def listar(self):
+        for chave, valor in self.dados.items():
+            print(f"{chave}: {valor}")
+
+
+class PersistenciaProfissional(BasePersistencia):
+    def __init__(self, arquivo="profissionais.json"):
+        super().__init__(arquivo)
+
+    # Métodos específicos para profissionais podem ser adicionados aqui
+
+
+class PersistenciaCliente(BasePersistencia):
+    def __init__(self, arquivo="clientes.json"):
+        super().__init__(arquivo)
+
+    # Métodos específicos para clientes podem ser adicionados aqui
+
+
+class PersistenciaPerfil(BasePersistencia):
+    def __init__(self, arquivo="perfis.json"):
+        super().__init__(arquivo)
+
+    # Métodos específicos para perfis podem ser adicionados aqui
+
+
+# Testando o sistema de persistência
+if __name__ == "__main__":
+    # Persistência de Profissionais
+    prof_persistencia = PersistenciaProfissional()
+    prof_persistencia.adicionar("Dr. João", {"email": "joao@clinica.com", "especialidade": "Dermatologia"})
+    prof_persistencia.adicionar("Dr. Maria", {"email": "maria@clinica.com", "especialidade": "Cardiologia"})
+    prof_persistencia.listar()
+
+    # Persistência de Clientes
+    cliente_persistencia = PersistenciaCliente()
+    cliente_persistencia.adicionar("Carlos", {"email": "carlos@gmail.com", "perfil": "VIP"})
+    cliente_persistencia.adicionar("Ana", {"email": "ana@gmail.com", "perfil": "Regular"})
+    cliente_persistencia.listar()
+
+    # Persistência de Perfis
+    perfil_persistencia = PersistenciaPerfil()
+    perfil_persistencia.adicionar("VIP", {"beneficio": "20% de desconto"})
+    perfil_persistencia.adicionar("Regular", {"beneficio": "Pontuação em fidelidade"})
+    perfil_persistencia.listar()
